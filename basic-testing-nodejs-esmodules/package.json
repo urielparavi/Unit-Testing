@@ -8,7 +8,7 @@
     "test": "vitest"
   },
   "keywords": [],
-  "author": "Maximilian Schwarzmüller",
+  "author": "Uriel Paravi",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.3"
