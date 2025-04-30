@@ -51,5 +51,17 @@ it('should yield 0 if an empty array is provided', () => {
 });
 
 it('should throw an error if no value is passed into the function', () => {
-  const result = add();
+  // We can to the same like resultFn, but the resultFn is a better approach
+  // try {
+  //   const result = add();
+  // } catch (error) {
+  //   expect(error).toBeDefined();
+  // }
+
+  // We wrap our add function with anonymous function, so that our add function will not execute immediately when JS will come
+  // to this line, but when our resultFn will call, so it will be when we run 'npm test with vitest
+  const resultFn = () => {
+    add();
+  };
+  expect(resultFn).toThrow();
 });
