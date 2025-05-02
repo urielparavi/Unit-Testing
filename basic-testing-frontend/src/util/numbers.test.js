@@ -38,7 +38,24 @@ describe('transformToNumber()', () => {
 
 describe('cleanNumbers()', () => {
   // We fix this test with the following test below
-  // it('should return an array of number values if an array of string number values is provided', () => {
+  it('should return an array of number values if an array of string number values is provided', () => {
+    const numberValues = ['1', '2'];
+
+    const cleanedNumbers = cleanNumbers(numberValues);
+
+    // *The difference between toBe() and toEqual()*
+
+    // ✅ toBe() checks for strict equality (===) – use it for primitives:
+    // numbers, strings, booleans, null, undefined
+
+    // ✅ toEqual() checks for deep equality – use it for objects, arrays, and complex structures
+
+    // expect(cleanedNumbers[0]).toBeTypeOf('number');
+    expect(cleanedNumbers).toEqual([1, 2]); // toBe()
+  });
+
+  // // We added this for the first value instead previous check, because it's is not the most accurate.
+  // it('should convert the first value to a number if string number values are provided', () => {
   //   const numberValues = ['1', '2'];
 
   //   const cleanedNumbers = cleanNumbers(numberValues);
@@ -46,23 +63,14 @@ describe('cleanNumbers()', () => {
   //   expect(cleanedNumbers[0]).toBeTypeOf('number');
   // });
 
-  // We added this for the first value instead previous check, because it's is not the most accurate.
-  it('should convert the first value to a number if string number values are provided', () => {
-    const numberValues = ['1', '2'];
+  // // We added this for checking the all array instead previous check, because it's is not the most accurate.
+  // it('should return an array of number values if an array of string number values is provided', () => {
+  //   const numberValues = ['1', '2'];
 
-    const cleanedNumbers = cleanNumbers(numberValues);
+  //   const cleanedNumbers = cleanNumbers(numberValues);
 
-    expect(cleanedNumbers[0]).toBeTypeOf('number');
-  });
-
-  // We added this for checking the all array instead previous check, because it's is not the most accurate.
-  it('should return an array of number values if an array of string number values is provided', () => {
-    const numberValues = ['1', '2'];
-
-    const cleanedNumbers = cleanNumbers(numberValues);
-
-    expect(cleanedNumbers.every((val) => typeof val === 'number')).toBe(true);
-  });
+  //   expect(cleanedNumbers.every((val) => typeof val === 'number')).toBe(true);
+  // });
 
   it('should throw an error if an array with at least one empty string is provided', () => {
     const numberValues = ['', 1];
