@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { generateToken } from './async-example';
+import { generateToken, generateTokenPromise } from './async-example';
 
 it('should generate a token value', (done) => {
   const testUserEmail = 'test@test.com';
@@ -34,11 +34,19 @@ it('should generate a token value', (done) => {
   });
 });
 
-it('should generate a token value', (done) => {
+it('should generate a token value', () => {
   const testUserEmail = 'test@test.com';
 
-  generateToken(testUserEmail, (err, token) => {
-    expect(token).toBe(2);
-    done();
-  });
+  // When we using promises we need to add return - this guarantees that Vitest/Jest wait for the promise to be resolved
+  return expect(generateTokenPromise(testUserEmail)).resolves.toBeDefined();
+  // expect(generateTokenPromise(testUserEmail)).resolves.toBe(2);
+});
+
+it('should generate a token value', async () => {
+  const testUserEmail = 'test@test.com';
+
+  const token = await generateTokenPromise(testUserEmail);
+
+  // expect(token).toBe(2);
+  expect(token).toBeDefined();
 });
