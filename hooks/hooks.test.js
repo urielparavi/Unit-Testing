@@ -1,12 +1,4 @@
-import {
-  it,
-  expect,
-  beforeAll,
-  beforeEach,
-  afterEach,
-  afterAll,
-  describe,
-} from 'vitest';
+import { it, expect, beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
 
 import { User } from './hooks';
 
