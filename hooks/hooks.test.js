@@ -1,9 +1,43 @@
-import { it, expect } from 'vitest';
+import { it, expect, beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
 
 import { User } from './hooks';
 
 const testEmail = 'test@test.com';
-const user = new User(testEmail);
+let user;
+
+// 🧪 TEST HOOKS:
+// "Hooks" are special functions used to run code before or after tests.
+// They help prepare or clean up the test environment so that each test starts fresh.
+
+// Commonly used hooks:
+// - beforeAll: runs once before all tests.
+// - beforeEach: runs before every single test (useful for setting up).
+// - afterEach: runs after every test (useful for cleanup).
+// - afterAll: runs once after all tests are done.
+
+// Example:
+// beforeEach(() => {
+//   user = new User('test@test.com'); // creates a new user before each test
+// });
+
+beforeAll(() => {
+  user = new User(testEmail);
+  console.log('beforeAll()');
+});
+
+beforeEach(() => {
+  user = new User(testEmail);
+  console.log('beforeEach()');
+});
+
+afterEach(() => {
+  // user = new User(testEmail);
+  console.log('afterEach()');
+});
+
+afterAll(() => {
+  console.log('afterAll()');
+});
 
 it('should update the email', () => {
   const newTestEmail = 'test2@test.com';
