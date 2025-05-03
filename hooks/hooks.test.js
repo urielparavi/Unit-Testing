@@ -1,4 +1,12 @@
-import { it, expect, beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
+import {
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  afterAll,
+  describe,
+} from 'vitest';
 
 import { User } from './hooks';
 
@@ -39,7 +47,24 @@ afterAll(() => {
   console.log('afterAll()');
 });
 
-it('should update the email', () => {
+// 🧪 .concurrent in Vitest:
+// Use .concurrent to run multiple tests at the same time (in parallel).
+// It can speed up your test suite when tests are independent of each other.
+
+// Example:
+// it.concurrent('should do something quickly', async () => {
+//   // Your test logic here
+// });
+
+// ⚠️ Be careful:
+// Don't use .concurrent if tests rely on shared state or modify global variables,
+// as this can cause unexpected behavior or test failures.
+
+// If we doing concurrent in suit, we add this only to our suit, so we don't need to add this for each single test
+// describe.concurrent();
+
+// concurrent - here we using it individual for each test
+it.concurrent('should update the email', () => {
   const newTestEmail = 'test2@test.com';
 
   user.updateEmail(newTestEmail);
@@ -47,22 +72,25 @@ it('should update the email', () => {
   expect(user.email).toBe(newTestEmail);
 });
 
-it('should have an email property', () => {
+it.concurrent('should have an email property', () => {
   expect(user).toHaveProperty('email');
 });
 
-it('should store the provided email value', () => {
+it.concurrent('should store the provided email value', () => {
   expect(user.email).toBe(testEmail);
 });
 
-it('should clear the email', () => {
+it.concurrent('should clear the email', () => {
   user.clearEmail();
 
   expect(user.email).toBe('');
 });
 
-it('should still have an email property after clearing the email', () => {
-  user.clearEmail();
+it.concurrent(
+  'should still have an email property after clearing the email',
+  () => {
+    user.clearEmail();
 
-  expect(user).toHaveProperty('email');
-});
+    expect(user).toHaveProperty('email');
+  }
+);
