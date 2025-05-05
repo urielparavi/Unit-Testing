@@ -3,6 +3,24 @@ import { promises as fs } from 'fs';
 
 import writeData from './io';
 
+// *IMPORTANT*
+// 1️⃣ Mocking only affects test files, NOT production code
+// The mock is only active during test execution.
+// Your real app (production code) uses the actual fs module.
+vi.mock('fs');
+
+// 2️⃣ vi.mock is hoisted (moved to the top) automatically
+// Unlike Jest, you can place vi.mock anywhere in the file.
+// Vitest moves it above the imports behind the scenes.
+import fs from 'fs';
+
+// 3️⃣ Mocks are isolated per test file
+// If you have another test file and don't call vi.mock('fs') there,
+// fs will NOT be mocked in that file — it will behave normally.
+// So always mock explicitly in every test file that needs it.
+
+// ----------------------------------------------------------------
+
 // 🔍 Spies vs Mocks - What's the difference? - To see what is spies, check on data.test.js
 
 // A **mock** replaces the original function with a fake one.
