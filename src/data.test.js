@@ -43,6 +43,16 @@ describe('generateReportData()', () => {
     // So, vi.fn() records how the function is used, and expect(...) verifies that usage.
     const logger = vi.fn(); // Create a mock function using Vitest (vi.fn)
 
+    // 🧪 Replaces the behavior of the **first call only** to the logger function.
+    // The function does nothing (noop) on the first call.
+    // Useful when you want to test a different behavior only for the first call (e.g., simulating a temporary failure).
+    // logger.mockImplementationOnce(() => {});
+
+    // 🧪 Replaces the behavior of **all calls** to the logger function (not just the first one).
+    // The function does nothing — it doesn't print anything, return a value, it simply ignores the call.
+    // Useful when you want to "silence" or control the behavior of the function during the entire test.
+    // logger.mockImplementation(() => {});
+
     generateReportData(logger); // Call the function under test and pass the mock logger
 
     expect(logger).toBeCalled(); // Verify that the logger was called at least once
