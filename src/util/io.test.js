@@ -79,3 +79,27 @@ it('should execute the writeFile method', () => {
   // Verifies that fs.writeFile was called with the correct filename and data
   expect(fs.writeFile).toBeCalledWith(testFilename, testData);
 });
+
+it('should return a promise that resolves to no value if called correctly', () => {
+  // Define test data that will be written to the file.
+  const testData = 'Test';
+  // Define a test filename for the mock write operation.
+  const testFilename = 'test.txt';
+
+  // Why toBeUndefined? because writeData returns a Promise that resolves with undefined because fs.writeFile
+  // doesn't return any value. The actual file is written as a side effect, not as a return value.
+  // This side effect is the act of saving the file to the hard drive via the file system (disk I/O)
+
+  // Asserts that calling writeData with valid arguments returns a Promise that resolves to undefined.
+  // This works because we've mocked fs.promises.writeFile to return a resolved Promise,
+  // so the actual write operation is simulated and succeeds without writing to disk.
+  return expect(writeData(testData, testFilename)).resolves.toBeUndefined();
+
+  // Call the function under test (our own function), which should use fs.writeFile internally.
+  // writeData(testData, testFilename);
+
+  // Assert that the mocked fs.writeFile function was called — verifying that our function behaved correctly.
+  // expect(fs.writeFile).toBeCalled();
+  // Verifies that fs.writeFile was called with the correct filename and data
+  // expect(fs.writeFile).toBeCalledWith(testFilename, testData);
+});
