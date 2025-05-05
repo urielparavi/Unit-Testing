@@ -21,18 +21,6 @@ import { generateReportData } from './data';
 //
 // ---
 //
-// A **mock** replaces the original function with a fake one.
-// It doesn't run the real logic, just records interactions.
-// This is useful when:
-//   - You want to isolate your test from side effects (DB, network)
-//   - You want full control over what the function returns
-//
-// Example:
-// const mockFn = jest.fn().mockReturnValue(42);
-// mockFn('hello');
-// expect(mockFn).toHaveBeenCalledWith('hello');
-// expect(mockFn()).toBe(42);
-//
 // 🔁 Summary:
 // - Use spies to observe real behavior.
 // - Use mocks to isolate and simulate behavior.
