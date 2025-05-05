@@ -9,10 +9,28 @@ import writeData from './io';
 // Your real app (production code) uses the actual fs module.
 vi.mock('fs');
 
+// 🧪 Mocking the 'path' module to simplify tests:
+// Instead of returning a full path, we only return the filename.
+// This avoids creating real file paths and keeps tests isolated and simple.
+
+// Mock the 'path' module so we can override its behavior during tests
+vi.mock('path', () => {
+  return {
+    default: {
+      // We are mocking the 'join' method inside the default export of 'path'
+      join: (...args) => {
+        // Return only the last argument (i.e., the filename)
+        // This skips creating a real file path, useful for test isolation
+        return args[args.length - 1];
+      },
+    },
+  };
+});
+
 // 2️⃣ vi.mock is hoisted (moved to the top) automatically
 // Unlike Jest, you can place vi.mock anywhere in the file.
 // Vitest moves it above the imports behind the scenes.
-import fs from 'fs';
+// import fs from 'fs';
 
 // 3️⃣ Mocks are isolated per test file
 // If you have another test file and don't call vi.mock('fs') there,
@@ -57,5 +75,7 @@ it('should execute the writeFile method', () => {
   writeData(testData, testFilename);
 
   // Assert that the mocked fs.writeFile function was called — verifying that our function behaved correctly.
-  expect(fs.writeFile).toBeCalled();
+  // expect(fs.writeFile).toBeCalled();
+  // Verifies that fs.writeFile was called with the correct filename and data
+  expect(fs.writeFile).toBeCalledWith(testFilename, testData);
 });
