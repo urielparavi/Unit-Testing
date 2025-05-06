@@ -36,13 +36,13 @@ describe('class ValidationError', () => {
     expect(testError.message).toBe(testMessage);
   });
 
-  it('should contain undefined if not data provided', () => {
+  it('should contain undefined if no data provided', () => {
     const testError = new ValidationError();
 
     expect(testError.message).toBeUndefined();
   });
 
-  it('should be defined data provided', () => {
+  it('should be defined if data provided', () => {
     const testMessage = 'Test';
 
     const testError = new ValidationError(testMessage);
