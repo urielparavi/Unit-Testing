@@ -7,6 +7,8 @@ export async function sendDataRequest(data) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+    // For test
+    // body: data,
   });
 
   const responseData = await response.json();

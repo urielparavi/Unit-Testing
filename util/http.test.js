@@ -6,25 +6,43 @@ import { sendDataRequest } from './http';
 // const testResponseData = { testKey: 'testData' };
 // // Mocking the fetch function
 // const testFetch = vi.fn((url, options) => {
-//   return new Promise((resolve, reject) => {
-//     // This is the mocked response from fetch
-//     const testResponse = {
-//       ok: true, // Simulates a successful response (HTTP status 200)
-//       json() {
-//         // Simulating the json() method of the response object
-//         return new Promise((resolve, reject) => {
-//           resolve(testResponseData); // The data we expect to receive from the server
-//         });
-//       },
-//     };
-//     resolve(testResponse); // Resolves the promise with the mocked response
-//   });
+// Simulate a validation step in the mock fetch function:
+// If the request body is not a string (i.e., not JSON.stringify-ed),
+// we reject the promise to mimic a client-side error.
+// This prevents the simulated request from being "sent" to the server,
+// and helps ensure that the tested code is properly converting data to JSON
+// before making an HTTP request.
+//   if (typeof options.body !== 'string'){
+//     return reject('Not a srting.')
+//   }
+//     return new Promise((resolve, reject) => {
+//       // This is the mocked response from fetch
+//       const testResponse = {
+//         ok: true, // Simulates a successful response (HTTP status 200)
+//         json() {
+//           // Simulating the json() method of the response object
+//           return new Promise((resolve, reject) => {
+//             resolve(testResponseData); // The data we expect to receive from the server
+//           });
+//         },
+//       };
+//       resolve(testResponse); // Resolves the promise with the mocked response
+//     });
 // });
 
 // Second way - The cleaner way
 const testResponseData = { testKey: 'testData' };
 
 const testFetch = vi.fn((url, options) => {
+  // Simulate a validation step in the mock fetch function:
+  // If the request body is not a string (i.e., not JSON.stringify-ed),
+  // we reject the promise to mimic a client-side error.
+  // This prevents the simulated request from being "sent" to the server,
+  // and helps ensure that the tested code is properly converting data to JSON
+  // before making an HTTP request.
+  if (typeof options.body !== 'string') {
+    return Promise.reject('Not a srting.');
+  }
   const testResponse = {
     ok: true,
     json() {
@@ -47,4 +65,27 @@ it('should return any available response data', () => {
   const testData = { key: 'test' };
 
   return expect(sendDataRequest(testData)).resolves.toEqual(testResponseData);
+});
+
+it('should convert the provided data to JSON before sending the request', async () => {
+  const testData = { key: 'test' };
+
+  let errorMessage;
+
+  try {
+    await sendDataRequest(testData);
+  } catch (error) {
+    // errorMessage = error - So the error we provided 'Not a string'
+    errorMessage = error;
+  }
+  // return expect(sendDataRequest(testData)).not.rejects.toBe('Not a srting.');
+
+  // We expect that the error message will NOT be 'Not a string.'
+  // This means that the body was properly converted to a string (using JSON.stringify)
+  // before being sent to the mock fetch function.
+  // If the body was correctly stringified, the fetch mock will not reject the promise
+  // with the error 'Not a string.', and the request will proceed as expected.
+  // Essentially, this test ensures that the code is correctly handling the conversion
+  // of the data into JSON format before making the HTTP request.
+  expect(errorMessage).not.toBe('Not a string.');
 });
