@@ -14,4 +14,6 @@ export function extractPostData(form) {
   validateNotEmpty(content, 'Content must not be empty!');
 
   return { title, content };
+  // For test
+  // return { title };
 }
