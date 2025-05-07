@@ -13,7 +13,7 @@ let testFormData;
 describe('extractPostData()', () => {
   // beforeEach runs the code inside it before each test. Here, we create the testFormData anew for every test.
   beforeEach(() => {
-    // Defining the testFormData object with title and content values
+    // Defining the fake (without vitest) testFormData object with title and content values
     testFormData = {
       title: testTitle, // The title of the post
       content: testContent, // The content of the post
