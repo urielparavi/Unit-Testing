@@ -1,5 +1,6 @@
 import { expect, it, vi } from 'vitest';
 import { sendDataRequest } from './http';
+import { HttpError } from './errors';
 
 // First way
 // This represents the data we expect to receive from the server's response (response.json())
@@ -88,4 +89,28 @@ it('should convert the provided data to JSON before sending the request', async 
   // Essentially, this test ensures that the code is correctly handling the conversion
   // of the data into JSON format before making the HTTP request.
   expect(errorMessage).not.toBe('Not a string.');
+});
+
+it('should throw an HttpError in case of non-ok responses', () => {
+  // In this test, we use mockImplementationOnce to temporarily override the behavior of the fetch mock function
+  // for a single call.
+  // This is useful when we want to simulate a specific scenario – in this case, a failed HTTP response with ok: false.
+  // Normally, our fetch mock returns ok: true, but here we deliberately return ok: false to test error handling.
+  // This allows us to verify that sendDataRequest correctly throws a custom HttpError (and not a generic Error)
+  // when it encounters a non-ok response from the server.
+  // mockImplementationOnce is ideal for one-time overrides like this, letting us test edge cases without affecting
+  // other tests.
+  testFetch.mockImplementationOnce((url, options) => {
+    const testResponse = {
+      ok: false,
+      json() {
+        return Promise.resolve(testResponseData);
+      },
+    };
+    return Promise.resolve(testResponse);
+  });
+
+  const testData = { key: 'test' };
+
+  return expect(sendDataRequest(testData)).rejects.toBeInstanceOf(HttpError);
 });

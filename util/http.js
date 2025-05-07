@@ -19,6 +19,7 @@ export async function sendDataRequest(data) {
       'Sending the request failed.',
       responseData
     );
+    // throw new Error('Error!');
   }
 
   return responseData;
