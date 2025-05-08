@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { it, vi } from 'vitest';
+import { expect, it, vi } from 'vitest';
 
 // Import a simulated browser window and DOM from happy-dom
 import { Window } from 'happy-dom';
@@ -53,6 +53,20 @@ document.write(htmlDocumentContent);
 // Replace the global `document` with our simulated one so that DOM-related code works in the test
 vi.stubGlobal('document', document);
 
-it('first test', () => {
-  showError('test');
+it('should add an error paragraph to the id="errors" element', () => {
+  // ✅ We must call showError first so that it modifies the DOM
+  // and adds the <p> element inside the #errors div.
+  // If we try to access DOM elements before this call, they won't exist.
+  showError('Test');
+
+  const errorsEl = document.getElementById('errors');
+
+  // ✅ Since the #errors div is empty before calling showError,
+  // the new <p> element becomes both the firstElementChild and lastElementChild.
+  // So we can safely use either one to access the added paragraph.
+  const errorParagraph = errorsEl.firstElementChild;
+
+  expect(errorParagraph).not.toBeNull();
+  // ✅ Verifies that the <p> element contains the correct error message text.
+  expect(errorParagraph.textContent).toBe('Test');
 });
