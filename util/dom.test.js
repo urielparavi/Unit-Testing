@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { expect, it, vi } from 'vitest';
+import { beforeEach, expect, it, vi } from 'vitest';
 
 // Import a simulated browser window and DOM from happy-dom
 import { Window } from 'happy-dom';
@@ -30,8 +30,6 @@ const window = new Window();
 // It's similar to destructuring, but here we're directly assigning the `document` property to a local variable.
 // so, const { document } = window;
 const document = window.document;
-// Inject the HTML content into the simulated document (just like the browser would do)
-document.write(htmlDocumentContent);
 
 // 📌 vi.stubGlobal(name, value)
 // -----------------------------
@@ -53,6 +51,18 @@ document.write(htmlDocumentContent);
 // Replace the global `document` with our simulated one so that DOM-related code works in the test
 vi.stubGlobal('document', document);
 
+// ✅ Reset the DOM before each test to ensure test isolation
+// - Clears any previous changes (like inserted elements from prior tests)
+// - Re-injects the original HTML structure from index.html
+// - Prevents test interference and makes each test run with a clean DOM state
+beforeEach(() => {
+  // Clear the current DOM content to remove any elements added by previous tests
+  document.body.innerHTML = '';
+
+  // Re-inject the original HTML structure from index.html into the document
+  document.write(htmlDocumentContent);
+});
+
 it('should add an error paragraph to the id="errors" element', () => {
   // ✅ We must call showError first so that it modifies the DOM
   // and adds the <p> element inside the #errors div.
@@ -69,4 +79,12 @@ it('should add an error paragraph to the id="errors" element', () => {
   expect(errorParagraph).not.toBeNull();
   // ✅ Verifies that the <p> element contains the correct error message text.
   expect(errorParagraph.textContent).toBe('Test');
+});
+
+it('should not contain an error paragraph initially', () => {
+  const errorsEl = document.getElementById('errors');
+  const errorParagraph = errorsEl.firstElementChild;
+
+  // Since we didn't call the showError(), the errorParagraph should not be exist
+  expect(errorParagraph).toBeNull();
 });
