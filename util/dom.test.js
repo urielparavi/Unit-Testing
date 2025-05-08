@@ -78,7 +78,7 @@ it('should add an error paragraph to the id="errors" element', () => {
 
   expect(errorParagraph).not.toBeNull();
   // ✅ Verifies that the <p> element contains the correct error message text.
-  expect(errorParagraph.textContent).toBe('Test');
+  // expect(errorParagraph.textContent).toBe('Test');
 });
 
 it('should not contain an error paragraph initially', () => {
@@ -87,4 +87,16 @@ it('should not contain an error paragraph initially', () => {
 
   // Since we didn't call the showError(), the errorParagraph should not be exist
   expect(errorParagraph).toBeNull();
+});
+
+it('should output the provided message in the error paragraph', () => {
+  const testErrorMessage = 'Test';
+
+  showError(testErrorMessage);
+
+  const errorsEl = document.getElementById('errors');
+  const errorParagraph = errorsEl.firstElementChild;
+
+  // ✅ Verifies that the <p> element contains the correct error message text.
+  expect(errorParagraph.textContent).toBe(testErrorMessage);
 });
